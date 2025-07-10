@@ -9,6 +9,8 @@ import java.util.Date;
 public class ExtentReportManager {
 
     private static ExtentReports extent;
+    public static String latestReportPath;
+    public static String timestamp;
 
     public static ExtentReports getInstance() {
         if (extent == null) {
@@ -20,6 +22,7 @@ public class ExtentReportManager {
     private static void createInstance() {
         // Format: yyyy-MM-dd_HH-mm-ss
         String timestamp = new SimpleDateFormat("dd-MMM-yyyy_HH-mm-ss").format(new Date());
+        latestReportPath = "reports/ExtentReport_" + timestamp + ".html";
         String reportPath = "reports/ExtentReport_" + timestamp + ".html";
 
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);

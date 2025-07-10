@@ -46,8 +46,23 @@ public class Hooks {
         }
 
         extent.flush();
+        System.out.println("==== Ending Scenario ====");
 
         System.out.println("==== Ending Scenario ====");
+
+        // Send email only once after the last scenario (optional: detect it via tag, or just always send here)
+        if (isLastScenario()) {
+            utils.EmailSender.sendReport(
+                    "poojachilwant31@gmail.com",
+                    ExtentReportManager.latestReportPath
+            );
+        }
+    }
+
+    private boolean isLastScenario() {
+        // you can implement logic to detect last scenario, or just always send after any scenario
+        return true; // for now, just always send
+
     }
 
     public static ExtentTest getScenarioTest() {
