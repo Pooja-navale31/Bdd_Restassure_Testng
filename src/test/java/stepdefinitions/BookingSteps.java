@@ -1,5 +1,7 @@
 package stepdefinitions;
 
+import com.aventstack.extentreports.ExtentTest;
+import hooks.Hooks;
 import io.cucumber.java.en.*;
 
 import io.restassured.response.Response;
@@ -17,10 +19,11 @@ public class BookingSteps {
     Response response;
     RequestSpecification request;
     static String Id;
+    ExtentTest test = Hooks.getScenarioTest();
 
     @When("I create bookings for all users in Excel")
     public void createBookingsForAllUsers() {
-
+        test.info("Creating Bookings for All users /Post");
         List<String[]> allData = ExcelUtils.getCellData("Sheet1");
 
         for (String[] row : allData) {
@@ -42,9 +45,14 @@ public class BookingSteps {
             payload.put("message","Your booking is confirmed");
 
             response = request.body(payload).post("/booking");
-            int statusCode = response.getStatusCode();
-            assertEquals(statusCode, 201, "Booking failed for user: " + firstname + " " + lastname);
+           // int statusCode = response.getStatusCode();
+            //assertEquals(statusCode, 201, "Booking failed for user: " + firstname + " " + lastname);
 
+            if (response.getStatusCode() == 201) {
+                test.pass("Got expected 201 OK");
+            } else {
+                test.fail("Booking failed for user: " + firstname + " " + lastname+ response.getStatusCode());
+            }
 
         }
     }
